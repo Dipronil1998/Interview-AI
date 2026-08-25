@@ -16,6 +16,13 @@ export function useVoice() {
 
   // Refs for Web Speech & Audio context
   const recognitionRef = useRef(null);
+  const isListeningRef = useRef(false);
+  const onTranscriptUpdateRef = useRef(null);
+  const basePromptRef = useRef('');
+  const accumulatedFinalRef = useRef('');
+  const latestSessionTextRef = useRef('');
+  const mediaStreamRef = useRef(null);
+
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
   const audioContextRef = useRef(null);
@@ -23,42 +30,12 @@ export function useVoice() {
   const animationFrameRef = useRef(null);
   const audioElementRef = useRef(null);
 
-  // Initialize SpeechRecognition if available
-  useEffect(() => {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (SpeechRecognition) {
-      const recognition = new SpeechRecognition();
-      recognition.continuous = true;
-      recognition.interimResults = true;
-      recognition.lang = 'en-US';
-
-      recognition.onresult = (event) => {
-        let currentTranscript = '';
-        for (let i = 0; i < event.results.length; i++) {
-          currentTranscript += event.results[i][0].transcript;
-        }
-        setTranscript(currentTranscript);
-      };
-
-      recognition.onerror = (event) => {
-        console.warn('Web Speech Recognition error:', event.error);
-        if (event.error !== 'no-speech') {
-          setMicError(`Microphone error: ${event.error}`);
-        }
-      };
-
-      recognition.onend = () => {
-        setIsListening(false);
-        stopAudioAnalysis();
-      };
-
-      recognitionRef.current = recognition;
-    }
-  }, []);
-
   // Audio level analyzer for glowing/waving microphone visualizer
-  const startAudioAnalysis = async (stream) => {
+  const startAudioAnalysis = (stream) => {
     try {
+      if (audioContextRef.current) {
+        stopAudioAnalysis();
+      }
       const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       const analyser = audioCtx.createAnalyser();
       const source = audioCtx.createMediaStreamSource(stream);
@@ -72,6 +49,7 @@ export function useVoice() {
       const dataArray = new Uint8Array(bufferLength);
 
       const updateLevel = () => {
+        if (!analyserRef.current) return;
         analyser.getByteFrequencyData(dataArray);
         let sum = 0;
         for (let i = 0; i < bufferLength; i++) {
@@ -90,18 +68,98 @@ export function useVoice() {
   const stopAudioAnalysis = () => {
     if (animationFrameRef.current) {
       cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = null;
     }
     if (audioContextRef.current) {
-      audioContextRef.current.close();
+      try {
+        audioContextRef.current.close();
+      } catch (e) {}
       audioContextRef.current = null;
     }
+    analyserRef.current = null;
     setAudioLevel(0);
   };
 
+  // Initialize SpeechRecognition if available
+  useEffect(() => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      const recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = 'en-US';
+
+      recognition.onresult = (event) => {
+        let currentSessionText = '';
+        for (let i = 0; i < event.results.length; i++) {
+          currentSessionText += event.results[i][0].transcript;
+        }
+
+        latestSessionTextRef.current = currentSessionText;
+
+        const base = basePromptRef.current;
+        const prevAcc = accumulatedFinalRef.current;
+        const fullText = [base, prevAcc, currentSessionText].filter(Boolean).join(' ').replace(/\s+/g, ' ');
+
+        setTranscript(fullText);
+        if (onTranscriptUpdateRef.current) {
+          onTranscriptUpdateRef.current(fullText);
+        }
+      };
+
+      recognition.onerror = (event) => {
+        console.warn('Web Speech Recognition error:', event.error);
+        if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+          setMicError('Microphone access denied or blocked');
+          isListeningRef.current = false;
+          setIsListening(false);
+          stopAudioAnalysis();
+        }
+      };
+
+      recognition.onend = () => {
+        // Save text captured in current session before auto-restarting or stopping
+        if (latestSessionTextRef.current) {
+          accumulatedFinalRef.current = [accumulatedFinalRef.current, latestSessionTextRef.current]
+            .filter(Boolean)
+            .join(' ')
+            .replace(/\s+/g, ' ');
+          latestSessionTextRef.current = '';
+        }
+
+        const base = basePromptRef.current;
+        const prevAcc = accumulatedFinalRef.current;
+        const finalFullText = [base, prevAcc].filter(Boolean).join(' ').replace(/\s+/g, ' ');
+
+        setTranscript(finalFullText);
+        if (onTranscriptUpdateRef.current) {
+          onTranscriptUpdateRef.current(finalFullText);
+        }
+
+        // Auto-restart if recording is still active (handles Chrome auto-stop on pause)
+        if (isListeningRef.current) {
+          try {
+            recognition.start();
+          } catch (e) {
+            console.warn('Failed to auto-restart recognition:', e);
+          }
+        } else {
+          setIsListening(false);
+          stopAudioAnalysis();
+        }
+      };
+
+      recognitionRef.current = recognition;
+    }
+  }, []);
+
   // Start Voice Recording & Speech-to-Text
-  const startListening = useCallback(async (onTranscriptUpdate) => {
+  const startListening = useCallback(async (onTranscriptUpdate, existingText = '') => {
     setMicError(null);
-    setTranscript('');
+    onTranscriptUpdateRef.current = onTranscriptUpdate;
+    basePromptRef.current = existingText || '';
+    accumulatedFinalRef.current = '';
+    latestSessionTextRef.current = '';
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
@@ -109,19 +167,17 @@ export function useVoice() {
     if (SpeechRecognition && recognitionRef.current) {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaStreamRef.current = stream;
         startAudioAnalysis(stream);
 
-        recognitionRef.current.onresult = (event) => {
-          let text = '';
-          for (let i = 0; i < event.results.length; i++) {
-            text += event.results[i][0].transcript;
-          }
-          setTranscript(text);
-          if (onTranscriptUpdate) onTranscriptUpdate(text);
-        };
-
-        recognitionRef.current.start();
+        isListeningRef.current = true;
         setIsListening(true);
+
+        try {
+          recognitionRef.current.start();
+        } catch (e) {
+          console.warn('Recognition start state warning:', e);
+        }
       } catch (err) {
         setMicError('Microphone access denied or unavailable');
         console.error('Mic access error:', err);
@@ -130,6 +186,7 @@ export function useVoice() {
       // Fallback to MediaRecorder + OpenAI Whisper API
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaStreamRef.current = stream;
         startAudioAnalysis(stream);
 
         const mediaRecorder = new MediaRecorder(stream);
@@ -144,7 +201,10 @@ export function useVoice() {
 
         mediaRecorder.onstop = async () => {
           stopAudioAnalysis();
-          stream.getTracks().forEach((track) => track.stop());
+          if (mediaStreamRef.current) {
+            mediaStreamRef.current.getTracks().forEach((track) => track.stop());
+            mediaStreamRef.current = null;
+          }
 
           const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
           const formData = new FormData();
@@ -157,8 +217,11 @@ export function useVoice() {
             });
             const data = await res.json();
             if (data.success && data.text) {
-              setTranscript(data.text);
-              if (onTranscriptUpdate) onTranscriptUpdate(data.text);
+              const fullText = [basePromptRef.current, data.text].filter(Boolean).join(' ');
+              setTranscript(fullText);
+              if (onTranscriptUpdateRef.current) {
+                onTranscriptUpdateRef.current(fullText);
+              }
             }
           } catch (err) {
             console.error('Whisper transcription error:', err);
@@ -166,8 +229,9 @@ export function useVoice() {
           }
         };
 
-        mediaRecorder.start();
+        isListeningRef.current = true;
         setIsListening(true);
+        mediaRecorder.start();
       } catch (err) {
         setMicError('Microphone access denied or unavailable');
       }
@@ -176,8 +240,14 @@ export function useVoice() {
 
   // Stop Listening
   const stopListening = useCallback(() => {
+    isListeningRef.current = false;
     setIsListening(false);
     stopAudioAnalysis();
+
+    if (mediaStreamRef.current) {
+      mediaStreamRef.current.getTracks().forEach((track) => track.stop());
+      mediaStreamRef.current = null;
+    }
 
     if (recognitionRef.current) {
       try {

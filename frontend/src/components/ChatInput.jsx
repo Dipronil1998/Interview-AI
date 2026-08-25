@@ -21,6 +21,7 @@ export default function ChatInput({
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       if (inputPrompt.trim() && !loading) {
+        if (isListening) stopListening();
         onSendMessage();
       }
     }
@@ -32,7 +33,7 @@ export default function ChatInput({
     } else {
       startListening((text) => {
         setInputPrompt(text);
-      });
+      }, inputPrompt);
     }
   };
 
