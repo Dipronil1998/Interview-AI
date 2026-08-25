@@ -1,14 +1,194 @@
 {
   "basics": {
-    "name": "",
-    "label": "",
-    "email": "",
-    "phone": "",
-    "location": "",
-    "summary": ""
+    "name": "Dipronil Das",
+    "label": "Full-Stack Developer",
+    "email": "dipronildas.net@gmail.com",
+    "phone": "+91 9804633142",
+    "location": "Kolkata, West Bengal, India",
+    "summary": "Full-Stack Developer with 4+ years of experience specializing in React, Next.js, Node.js, and TypeScript. Experienced in building scalable REST APIs, microservices, real-time systems, payment integrations, database optimization, and cloud-based applications. Delivered up to 40% reduction in API and database latency while developing high-performance, SEO-friendly web applications."
   },
-  "skills": [],
-  "experience": [],
-  "projects": [],
-  "education": []
+  "skills": [
+    {
+      "category": "Languages",
+      "items": [
+        "JavaScript (ES6+)",
+        "TypeScript",
+        "SQL"
+      ]
+    },
+    {
+      "category": "Backend",
+      "items": [
+        "Node.js",
+        "Express.js",
+        "REST APIs",
+        "JWT",
+        "RBAC",
+        "WebSocket",
+        "Webhooks",
+        "Microservices"
+      ]
+    },
+    {
+      "category": "Databases",
+      "items": [
+        "PostgreSQL",
+        "MySQL",
+        "MongoDB",
+        "Redis"
+      ]
+    },
+    {
+      "category": "Frontend",
+      "items": [
+        "React.js",
+        "Next.js",
+        "Redux",
+        "React Native",
+        "MobX",
+        "SvelteKit",
+        "shadcn/ui"
+      ]
+    },
+    {
+      "category": "DevOps & Cloud",
+      "items": [
+        "AWS",
+        "EC2",
+        "S3",
+        "RDS",
+        "Docker",
+        "CI/CD"
+      ]
+    },
+    {
+      "category": "Tools",
+      "items": [
+        "Git",
+        "Postman",
+        "Swagger",
+        "Jira"
+      ]
+    },
+    {
+      "category": "AI & Modern Tools",
+      "items": [
+        "OpenAI API",
+        "Prompt Engineering",
+        "Retrieval-Augmented Generation (RAG)"
+      ]
+    }
+  ],
+  "experience": [
+    {
+      "company": "Kloudz Computing",
+      "position": "Software Development Engineer",
+      "location": "Kolkata, West Bengal, India",
+      "startDate": "Apr 2025",
+      "endDate": "Present",
+      "responsibilities": [
+        "Engineered high-throughput REST APIs using Hono/SvelteKit, achieving sub-100ms response times for real-time valet tracking.",
+        "Optimized database performance through indexing, query optimization, and connection pooling, reducing latency by 40% during peak traffic.",
+        "Built a scalable URL shortening service with efficient redirection, unique short-link generation, and reliable API handling.",
+        "Architected real-time ticket synchronization using WebSockets for instant bidirectional updates across attendant devices.",
+        "Integrated Stripe payments with webhook validation to ensure reliable transaction processing.",
+        "Worked with AWS services including EC2, S3, and CloudWatch for deployment and monitoring."
+      ]
+    },
+    {
+      "company": "TechWens Software Pvt. Ltd.",
+      "position": "Node.js Developer",
+      "location": "Kolkata, West Bengal, India",
+      "startDate": "Aug 2022",
+      "endDate": "Mar 2025",
+      "responsibilities": [
+        "Developed 20+ REST APIs for high-traffic e-commerce applications.",
+        "Integrated Cashfree payment and logistics APIs for automated order fulfillment.",
+        "Implemented secure authentication and authorization using JWT and role-based access control.",
+        "Refactored database schemas and optimized PostgreSQL queries to improve application performance and data consistency.",
+        "Established standardized application logging, decreasing debugging time by approximately 40%."
+      ]
+    },
+    {
+      "company": "AGPAYTECH INDIA PVT. LTD.",
+      "position": "Junior Web Developer",
+      "location": "Kolkata, West Bengal, India",
+      "startDate": "Aug 2021",
+      "endDate": "Aug 2022",
+      "responsibilities": [
+        "Developed payment-processing microservices for reconciliation and transaction workflows.",
+        "Implemented reliable ACID-compliant transaction processing for high-volume financial operations.",
+        "Automated application QA by implementing unit test suites using Jest."
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "SecondHugs – Multi-Vendor Marketplace",
+      "technologies": [
+        "Next.js",
+        "MobX",
+        "Cashfree",
+        "Node.js"
+      ],
+      "description": "SEO-optimized multi-vendor marketplace supporting vendor onboarding, product catalogs, shopping workflows, and order lifecycle management.",
+      "highlights": [
+        "Built scalable marketplace workflows for vendors, products, carts, and orders.",
+        "Implemented secure Cashfree checkout and payment integration.",
+        "Improved application performance using server-side rendering and optimized API integration."
+      ]
+    },
+    {
+      "name": "Check Valet",
+      "technologies": [
+        "React",
+        "Next.js",
+        "React Native",
+        "Node.js",
+        "PostgreSQL",
+        "WebSocket",
+        "Stripe"
+      ],
+      "description": "Cross-platform valet booking and vehicle tracking platform supporting booking, payment, attendant assignment, and real-time vehicle status updates.",
+      "highlights": [
+        "Built scalable valet booking and payment workflows.",
+        "Implemented real-time ticket synchronization using WebSockets.",
+        "Developed React Native applications for valet attendants.",
+        "Optimized database queries and schema design for high-volume booking operations."
+      ]
+    },
+    {
+      "name": "AI SQL Assistant",
+      "technologies": [
+        "Node.js",
+        "Express.js",
+        "React",
+        "OpenAI API",
+        "MySQL",
+        "Redis",
+        "RAG"
+      ],
+      "description": "AI-powered SQL assistant that converts natural-language questions into SQL queries and executes validated read-only queries against a database.",
+      "highlights": [
+        "Generated SQL queries from natural-language questions using the OpenAI API.",
+        "Implemented SQL validation to prevent destructive database operations.",
+        "Used Redis caching to reduce repeated SQL-generation requests.",
+        "Added query explanation and optimization capabilities."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "degree": "Master of Computer Applications (MCA)",
+      "institution": "Maulana Abul Kalam Azad University of Technology (MAKAUT)",
+      "year": "2021",
+      "grade": "DGPA: 9.60 / 10.0"
+    },
+    {
+      "degree": "Bachelor of Computer Applications (BCA)",
+      "institution": "Maulana Abul Kalam Azad University of Technology (MAKAUT)",
+      "year": "2019",
+      "grade": "DGPA: 8.52 / 10.0"
+    }
+  ]
 }
