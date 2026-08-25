@@ -2,7 +2,7 @@
  * @swagger
  * tags:
  *   - name: Chat
- *     description: Multi-Agent Chat Endpoints
+ *     description: AI Interviewer Chat Endpoints
  *   - name: Threads
  *     description: Conversation Thread Management Endpoints
  */
@@ -11,8 +11,8 @@
  * @swagger
  * /api/chat:
  *   post:
- *     summary: Send message to Multi-Agent Assistant
- *     description: Processes prompt through Orchestrator and specialized agents (code, debug, database, documentation). Pass optional threadId to continue an existing thread, or leave empty to start a new thread.
+ *     summary: Send message to AI Interviewer
+ *     description: Evaluates candidate answers and responds via AI Interviewer Agent. Pass optional threadId to continue an existing thread.
  *     tags:
  *       - Chat
  *     requestBody:
@@ -30,8 +30,8 @@
  *                 example: "a8d29837-1234-4b56-7890-abcdef123456"
  *               message:
  *                 type: string
- *                 description: Developer prompt or question
- *                 example: "Write a React component for a data table"
+ *                 description: Candidate voice/text answer
+ *                 example: "I have 5 years of experience with React and Node.js..."
  *     responses:
  *       200:
  *         description: Success
@@ -48,13 +48,13 @@
  *                   example: "a8d29837-1234-4b56-7890-abcdef123456"
  *                 title:
  *                   type: string
- *                   example: "Write a React component for a data table"
+ *                   example: "Technical Interview Session"
  *                 agent:
  *                   type: string
- *                   example: "code"
+ *                   example: "interviewer"
  *                 response:
  *                   type: string
- *                   example: "Here is your React component..."
+ *                   example: "Great answer! Can you elaborate on how you handle state management?"
  *       400:
  *         description: Bad Request - Missing required field 'message'
  *       404:

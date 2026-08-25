@@ -1,43 +1,43 @@
 import React from 'react';
-import { Bot, Code, Bug, Database, FileText } from 'lucide-react';
+import { Sparkles, Code, Terminal, Cpu, UserCheck } from 'lucide-react';
 
 export default function WelcomeScreen({ onSelectSuggestion }) {
   const suggestions = [
     {
       icon: <Code size={20} style={{ color: '#38bdf8' }} />,
-      title: 'Code Agent',
-      desc: 'Build a responsive React data table component with search and sorting.',
-      prompt: 'Build a responsive React data table component with search and sorting.',
+      title: 'Technical Coding Interview',
+      desc: 'Practice live data structures, algorithms, and system coding questions.',
+      prompt: 'I am ready for a technical coding interview. Please ask me a medium complexity algorithm problem.',
     },
     {
-      icon: <Bug size={20} style={{ color: '#fb7185' }} />,
-      title: 'Debug Agent',
-      desc: 'Fix Unhandled Promise Rejection in Node.js Express async handler.',
-      prompt: 'How do I fix Unhandled Promise Rejections in Node.js Express async route handlers?',
+      icon: <Cpu size={20} style={{ color: '#fb7185' }} />,
+      title: 'System Design Interview',
+      desc: 'Architect scalable distributed systems, microservices, and database layers.',
+      prompt: 'Let us conduct a System Design interview. Ask me to design a high-throughput real-time messaging application.',
     },
     {
-      icon: <Database size={20} style={{ color: '#34d399' }} />,
-      title: 'Database Agent',
-      desc: 'Design an optimized MongoDB Mongoose schema with index recommendations.',
-      prompt: 'Design an optimized MongoDB Mongoose schema for an e-commerce order management system with indexing advice.',
+      icon: <UserCheck size={20} style={{ color: '#34d399' }} />,
+      title: 'Behavioral & Leadership',
+      desc: 'Practice STAR format responses for situation, task, action, and results.',
+      prompt: 'Start a behavioral interview. Ask me about a time I dealt with conflicting team priorities or technical debt.',
     },
     {
-      icon: <FileText size={20} style={{ color: '#c084fc' }} />,
-      title: 'Documentation Agent',
-      desc: 'Write a comprehensive README.md with setup and OpenAPI endpoint specs.',
-      prompt: 'Write a complete production-ready README.md for a Node.js REST API service with setup instructions.',
+      icon: <Terminal size={20} style={{ color: '#c084fc' }} />,
+      title: 'Fullstack & Web Architecture',
+      desc: 'Deep dive into React, Node.js async performance, API contracts, and state management.',
+      prompt: 'Let us start a Fullstack Software Engineer interview focusing on React and Node.js performance tuning.',
     },
   ];
 
   return (
     <div className="welcome-container">
       <div className="welcome-icon">
-        <Bot size={34} />
+        <Sparkles size={34} />
       </div>
 
-      <h1 className="welcome-title">Developer Assistant AI</h1>
+      <h1 className="welcome-title">AI Interviewer Assistant</h1>
       <p className="welcome-subtitle">
-        Powered by Orchestrator, Code, Debug, Database, and Documentation specialized agents. Ask any coding, debugging, or database question.
+        Powered by dedicated AI Interview Agents. Evaluation is personalized against your Candidate CV and target Job Description.
       </p>
 
       <div className="suggestions-grid">

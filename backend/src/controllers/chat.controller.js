@@ -4,7 +4,6 @@ import path from "path";
 import { fileURLToPath } from "url";
 
 import Conversation from "../models/Conversation.js";
-import { orchestratorAgent } from "../agents/orchestrator.agent.js";
 import { interviewerAgent } from "../agents/interviewer.agent.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -173,25 +172,17 @@ export const chat = async (req, res) => {
       content: message,
     });
 
-    let result;
+    const responseText = await interviewerAgent({
+      message,
+      jobDescription: conversation.jobDescription || "General Technical Interview for Software Engineer",
+      candidateCv: conversation.candidateCv || getDefaultCv(),
+      history: conversation.messages,
+    });
 
-    // Check if this thread is an AI Interview session
-    if (conversation.isInterview) {
-      const responseText = await interviewerAgent({
-        message,
-        jobDescription: conversation.jobDescription,
-        candidateCv: conversation.candidateCv || getDefaultCv(),
-        history: conversation.messages,
-      });
-
-      result = {
-        agent: "interviewer",
-        response: responseText,
-      };
-    } else {
-      // Standard Multi-Agent System
-      result = await orchestratorAgent(message);
-    }
+    const result = {
+      agent: "interviewer",
+      response: responseText,
+    };
 
     conversation.messages.push({
       role: "assistant",

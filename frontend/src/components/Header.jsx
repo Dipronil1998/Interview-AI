@@ -2,10 +2,6 @@ import React, { useState } from 'react';
 import {
   Menu,
   Sparkles,
-  Code,
-  Bug,
-  Database,
-  FileText,
   Cpu,
   Volume2,
   VolumeX,
@@ -31,44 +27,11 @@ export default function Header({
   } = voiceProps;
 
   const getAgentBadge = (agent) => {
-    switch (agent?.toLowerCase()) {
-      case 'code':
-        return (
-          <span className="agent-badge agent-code">
-            <Code size={12} /> Code Agent
-          </span>
-        );
-      case 'debug':
-        return (
-          <span className="agent-badge agent-debug">
-            <Bug size={12} /> Debug Agent
-          </span>
-        );
-      case 'database':
-        return (
-          <span className="agent-badge agent-database">
-            <Database size={12} /> Database Agent
-          </span>
-        );
-      case 'documentation':
-        return (
-          <span className="agent-badge agent-documentation">
-            <FileText size={12} /> Docs Agent
-          </span>
-        );
-      case 'interviewer':
-        return (
-          <span className="agent-badge agent-interviewer">
-            <Sparkles size={12} /> AI Interviewer
-          </span>
-        );
-      default:
-        return (
-          <span className="agent-badge agent-general">
-            <Sparkles size={12} /> Multi-Agent
-          </span>
-        );
-    }
+    return (
+      <span className="agent-badge agent-interviewer">
+        <Sparkles size={12} /> AI Interviewer
+      </span>
+    );
   };
 
   return (

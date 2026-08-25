@@ -4,10 +4,6 @@ import remarkGfm from 'remark-gfm';
 import {
   User,
   Bot,
-  Code,
-  Bug,
-  Database,
-  FileText,
   Sparkles,
   Copy,
   Check,
@@ -71,41 +67,11 @@ export default function MessageItem({ message, index, voiceProps = {} }) {
   };
 
   const renderAgentBadge = (agent) => {
-    switch (agent?.toLowerCase()) {
-      case 'code':
-        return (
-          <span className="agent-badge agent-code">
-            <Code size={11} /> Code Agent
-          </span>
-        );
-      case 'debug':
-        return (
-          <span className="agent-badge agent-debug">
-            <Bug size={11} /> Debug Agent
-          </span>
-        );
-      case 'database':
-        return (
-          <span className="agent-badge agent-database">
-            <Database size={11} /> Database Agent
-          </span>
-        );
-      case 'documentation':
-        return (
-          <span className="agent-badge agent-documentation">
-            <FileText size={11} /> Docs Agent
-          </span>
-        );
-      case 'general':
-      case 'orchestrator':
-        return (
-          <span className="agent-badge agent-general">
-            <Sparkles size={11} /> Orchestrator
-          </span>
-        );
-      default:
-        return null;
-    }
+    return (
+      <span className="agent-badge agent-interviewer">
+        <Sparkles size={11} /> AI Interviewer
+      </span>
+    );
   };
 
   return (

@@ -15,7 +15,7 @@ export default function ThinkingIndicator() {
             <div className="dot"></div>
           </div>
           <span className="thinking-text">
-            Orchestrator routing query to specialized agent...
+            AI Interviewer is evaluating response...
           </span>
         </div>
       </div>
